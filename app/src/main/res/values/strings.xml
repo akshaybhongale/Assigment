@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Assignment</string>
+    <string name="title_activity_character_details">Character</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="location">Location Details</string>
+    <string name="residents">Residents : %1$d </string>
+    <string name="dimensions">Dimension : %1$s </string>
+    <string name="types">Type : %1$s </string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="character_title">%1$s (%2$s)</string>
+    <string name="dashboard">Dashboard</string>
+</resources>
