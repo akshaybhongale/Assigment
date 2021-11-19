@@ -36,12 +36,6 @@ android {
         viewBinding true
     }
 }
-/*configurations.all {
-    resolutionStrategy {
-        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
-
-    }
-}*/
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
