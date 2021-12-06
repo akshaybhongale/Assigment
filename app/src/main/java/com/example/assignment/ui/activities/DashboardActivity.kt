@@ -1,6 +1,7 @@
 package com.example.assignment.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.assignment.R
+import com.example.assignment.api.CHARACTER_LIST_URL
 import com.example.assignment.databinding.ActivityDashboardBinding
 import com.example.assignment.listener.LoadMoreScroll
 import com.example.assignment.listener.OnLoadMoreListener
@@ -17,9 +19,7 @@ import com.example.assignment.models.ApiResponse
 import com.example.assignment.models.CharacterList
 import com.example.assignment.models.Results
 import com.example.assignment.ui.adapters.CharacterAdapter
-import com.example.assignment.utils.BOTTOM_VERTICAL_BIAS
-import com.example.assignment.utils.CENTER_VERTICAL_BIAS
-import com.example.assignment.utils.isConnectedToInternet
+import com.example.assignment.utils.*
 import com.example.assignment.viewmodel.DashboardViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -78,7 +78,7 @@ class DashboardActivity : AppCompatActivity() {
             override fun onLoadMore() {
                 getCharacterList(
                     mDashboardViewModel.getNextPageUrl(),
-                    mDashboardViewModel.getSearchString()
+                    null
                 )
             }
         })
@@ -115,6 +115,10 @@ class DashboardActivity : AppCompatActivity() {
                         updateList(it.result)
                     }
                     is ApiResponse.OnError -> {
+                        if (it.errorCode == ERROR_CODE_404) {
+                            mCharacterList.clear()
+                            mCharacterListAdapter.clearList()
+                        }
                         Snackbar.make(holder.root, it.errorMsg, Snackbar.LENGTH_SHORT).show()
                     }
                 }
@@ -154,8 +158,16 @@ class DashboardActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.etSearch)
         editText.doAfterTextChanged {
             it?.let {
-                mDashboardViewModel.setSearchString(it.toString())
+                mCharacterListAdapter.clearList()
+                if (it.length > MIN_SEARCH_LEN) {
+                    mDashboardViewModel.setNextPageUrl(CHARACTER_LIST_URL)
+                    mDashboardViewModel.setSearchString(it.toString())
+                } else {
+                    mDashboardViewModel.clear()
+                }
+                mCharacterList.clear()
                 checkNetworkStatus(mDashboardViewModel.getSearchString())
+
             }
         }
     }

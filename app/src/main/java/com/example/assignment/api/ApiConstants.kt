@@ -109,3 +109,5 @@ const val RESIDENTS = "residents"
  * Constants for API response
  */
 const val DIMENSION = "dimension"
+
+const val ERROR = "error"

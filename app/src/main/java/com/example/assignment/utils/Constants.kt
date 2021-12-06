@@ -18,6 +18,7 @@ const val ERROR_CODE_401 = 401
 const val ERROR_CODE_402 = 402
 const val ERROR_CODE_403 = 403
 const val ERROR_CODE_500 = 500
+const val ERROR_CODE_404 = 404
 
 /**
  * Error message for network call
@@ -27,6 +28,7 @@ const val ERROR_MSG_401 = "Request time out"
 const val ERROR_MSG_402 = "Server not responding"
 const val ERROR_MSG_403 = "Network down error "
 const val ERROR_MSG_500 = "Internal Server Error"
+const val ERROR_MSG_404 = "No record found"
 
 /**
  *  status code
@@ -76,3 +78,5 @@ const val IMAGE_HEIGHT_RATIO = 90
 const val IMAGE_WIDTH_RATIO = 100
 
 const val EMPTY_STRING = ""
+
+const val MIN_SEARCH_LEN = 2

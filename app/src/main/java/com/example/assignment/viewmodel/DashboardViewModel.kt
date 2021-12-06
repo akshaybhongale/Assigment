@@ -6,6 +6,8 @@ import com.example.assignment.api.ApiService
 import com.example.assignment.api.CHARACTER_LIST_URL
 import com.example.assignment.models.ApiResponse
 import com.example.assignment.utils.EMPTY_STRING
+import com.example.assignment.utils.ERROR_CODE_404
+import com.example.assignment.utils.ERROR_MSG_404
 import com.example.assignment.utils.geNetworkError
 import kotlinx.coroutines.Dispatchers
 
@@ -35,7 +37,12 @@ class DashboardViewModel : ViewModel() {
     fun getCharacterList(pageUrl: String, searchString: String?) =
         liveData(Dispatchers.IO) {
             try {
-                emit(ApiResponse.OnSuccess(ApiService.getCharacterList(pageUrl, searchString)))
+                val result = ApiService.getCharacterList(pageUrl, searchString)
+                if (result.error == null) {
+                    emit(ApiResponse.OnSuccess(result))
+                } else {
+                    emit(ApiResponse.OnError(ERROR_CODE_404, result.error ?: ERROR_MSG_404))
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 emit(geNetworkError(e))
@@ -49,9 +56,24 @@ class DashboardViewModel : ViewModel() {
         mNextPageUrl = pageUrl
     }
 
+    /**
+     * This method is used to maintain search string for pagination purpose
+     * @param searchString search string from UI
+     */
     fun setSearchString(searchString: String?) {
         mSearchString = searchString
     }
 
+    /**
+     * This method is used to get Search string
+     */
     fun getSearchString() = mSearchString
+
+    /**
+     * This method is used to set default value for searchString and next page url
+     */
+    fun clear(){
+        mSearchString = EMPTY_STRING
+        mNextPageUrl = CHARACTER_LIST_URL
+    }
 }

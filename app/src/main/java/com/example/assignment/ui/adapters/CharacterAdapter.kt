@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.databinding.AdapterCharacterBinding
 import com.example.assignment.models.Results
 import com.example.assignment.ui.activities.CharacterDetailsActivity
+import com.example.assignment.utils.DEFAULT_ZERO
 import com.example.assignment.utils.KEY_CHARACTER
 import com.example.assignment.utils.getColorCode
 
@@ -65,6 +66,12 @@ class CharacterAdapter(characterList: ArrayList<Results>) :
         notifyItemRangeInserted(lastSize, updatedSize)
     }
 
+    /**
+     * This method is used to clear recylcerview items list
+     */
+    fun clearList(){
+        notifyItemRangeRemoved(DEFAULT_ZERO,itemCount)
+    }
     override fun onBindViewHolder(itemView: CharacterViewHolder, position: Int) {
         itemView.bind(mList[position])
     }
