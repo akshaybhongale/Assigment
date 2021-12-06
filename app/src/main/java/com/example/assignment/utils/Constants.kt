@@ -74,3 +74,5 @@ const val IMAGE_HEIGHT_RATIO = 90
  * To set image width to height ratio
  */
 const val IMAGE_WIDTH_RATIO = 100
+
+const val EMPTY_STRING = ""

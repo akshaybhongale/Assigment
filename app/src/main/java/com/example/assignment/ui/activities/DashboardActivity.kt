@@ -2,9 +2,11 @@ package com.example.assignment.ui.activities
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.assignment.R
@@ -58,7 +60,8 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(holder.root)
         mDashboardViewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
         initRecyclerView()
-        checkNetworkStatus()
+        setUpSearchView()
+        checkNetworkStatus(mDashboardViewModel.getSearchString())
     }
 
     /**
@@ -73,7 +76,10 @@ class DashboardActivity : AppCompatActivity() {
         mScrollListener = LoadMoreScroll(linearLayoutManager)
         mScrollListener.setLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
-                getCharacterList(mDashboardViewModel.getNextPageUrl())
+                getCharacterList(
+                    mDashboardViewModel.getNextPageUrl(),
+                    mDashboardViewModel.getSearchString()
+                )
             }
         })
         holder.recyclerView.addOnScrollListener(mScrollListener)
@@ -82,9 +88,9 @@ class DashboardActivity : AppCompatActivity() {
     /**
      * This method is used to check internet connection and make rest api call
      */
-    private fun checkNetworkStatus() {
+    private fun checkNetworkStatus(searchString: String?) {
         if (isConnectedToInternet(applicationContext)) {
-            getCharacterList(mDashboardViewModel.getNextPageUrl())
+            getCharacterList(mDashboardViewModel.getNextPageUrl(), searchString)
         } else {
             Snackbar.make(
                 holder.root,
@@ -98,10 +104,10 @@ class DashboardActivity : AppCompatActivity() {
      * This method is used to execute REST API call and update the view
      * @param pageUrl reference for pagination url
      */
-    private fun getCharacterList(pageUrl: String?) {
+    private fun getCharacterList(pageUrl: String?, searchString: String?) {
         pageUrl?.let {
             showProgressBar()
-            mDashboardViewModel.getCharacterList(pageUrl).observe(this, {
+            mDashboardViewModel.getCharacterList(pageUrl, searchString).observe(this, {
                 holder.progressbar.visibility = View.GONE
                 when (it) {
                     is ApiResponse.OnSuccess -> {
@@ -143,4 +149,15 @@ class DashboardActivity : AppCompatActivity() {
             mScrollListener.setLoading(false)
         }
     }
+
+    private fun setUpSearchView() {
+        val editText = findViewById<EditText>(R.id.etSearch)
+        editText.doAfterTextChanged {
+            it?.let {
+                mDashboardViewModel.setSearchString(it.toString())
+                checkNetworkStatus(mDashboardViewModel.getSearchString())
+            }
+        }
+    }
+
 }

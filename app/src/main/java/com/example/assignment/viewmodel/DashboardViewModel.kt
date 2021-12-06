@@ -5,6 +5,7 @@ import androidx.lifecycle.liveData
 import com.example.assignment.api.ApiService
 import com.example.assignment.api.CHARACTER_LIST_URL
 import com.example.assignment.models.ApiResponse
+import com.example.assignment.utils.EMPTY_STRING
 import com.example.assignment.utils.geNetworkError
 import kotlinx.coroutines.Dispatchers
 
@@ -18,6 +19,9 @@ class DashboardViewModel : ViewModel() {
      */
     private var mNextPageUrl: String? = CHARACTER_LIST_URL
 
+
+    private var mSearchString: String? = EMPTY_STRING
+
     /**
      * This method is used to get next page url of character list
      * @return url name for pagination purpose
@@ -28,10 +32,10 @@ class DashboardViewModel : ViewModel() {
      * This method is used to character list from server
      * @param pageUrl page url to get character list
      */
-    fun getCharacterList(pageUrl: String) =
+    fun getCharacterList(pageUrl: String, searchString: String?) =
         liveData(Dispatchers.IO) {
             try {
-                emit(ApiResponse.OnSuccess(ApiService.getCharacterList(pageUrl)))
+                emit(ApiResponse.OnSuccess(ApiService.getCharacterList(pageUrl, searchString)))
             } catch (e: Exception) {
                 e.printStackTrace()
                 emit(geNetworkError(e))
@@ -44,4 +48,10 @@ class DashboardViewModel : ViewModel() {
     fun setNextPageUrl(pageUrl: String?) {
         mNextPageUrl = pageUrl
     }
+
+    fun setSearchString(searchString: String?) {
+        mSearchString = searchString
+    }
+
+    fun getSearchString() = mSearchString
 }

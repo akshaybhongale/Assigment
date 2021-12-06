@@ -47,8 +47,8 @@ object ApiService {
      * @param pageUrl pageUrl reference for pagination
      * @return CharacterList response from server
      */
-    suspend fun getCharacterList(pageUrl: String): CharacterList {
-        return mIApi.getCharacter(pageUrl)
+    suspend fun getCharacterList(pageUrl: String,searchString: String?): CharacterList {
+        return mIApi.getCharacter(pageUrl,searchString)
     }
 
     /**
